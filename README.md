@@ -35,10 +35,10 @@ Score Splitter 0.1.0 will take your pdf score (that has bookmarks on the first p
 ### GUI Screenshot
 <img width="803" alt="GUI Screenshot" src="https://github.com/MelMony/ScoreSplitter/assets/31891015/37ab0a95-b186-4717-9104-7a1cf5309eff">
 
-### Example parts folder output
+### Example parts in part folder
 <img width="431" alt="Example part folder with parts" src="https://github.com/MelMony/ScoreSplitter/assets/31891015/991b2501-f1cf-4756-991c-eff30f824a0e">
 
-### Example parts in part folder
+### Example parts folder output
 <img width="459" alt="Output directory with part folders" src="https://github.com/MelMony/ScoreSplitter/assets/31891015/6383ad79-5e0e-466b-b128-4276b60e28f1">
 
 
