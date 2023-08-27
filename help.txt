@@ -1,0 +1,11 @@
+Score Splitter
+
+1. Input your score to be split using the file browser
+2. Input your output location using the folder browser
+3. Check or uncheck whether you want to output to a single folder or seperate folders for each part*
+3. Input your desired metadata, for multiple values seperate each value with a comma
+4. Check the part names list aligns with your score bookmarks (order is important!)
+5. Click submit to start the process
+6. If sucessful your parts will be at the output location of your choice.
+
+* Note: If no part folders exist and you select this option, part folders will be created for you using the part names

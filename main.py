@@ -5,6 +5,7 @@ from pdfOperations import add_metadata, split_score_by_bookmarks
 # Misc
 sg.theme("TealMono")
 default_parts = convert_txt_file_to_string('Parts_Default.txt')
+help_text = convert_txt_file_to_string('help.txt')
 
 # Fonts
 h1 = ("Helvetica", 36)
@@ -14,9 +15,10 @@ body = ("Helvetica", 12)
 button_font = ("Helvetica", 18)
 
 # Elements
-submit = sg.Button("Reset", font=button_font)
-reset = sg.Button("Submit", font=button_font)
-form_buttons = [sg.Push(),submit,sg.HorizontalSeparator(), reset, sg.HorizontalSeparator(pad=200)]
+submit = sg.Button("Submit", font=button_font)
+reset = sg.Button("Reset", font=button_font)
+help = sg.Button("?",font=button_font)
+form_buttons = [sg.HorizontalSeparator(pad=20, color=(173, 204, 218)), reset, sg.HorizontalSeparator(color=(173, 204, 218)), submit, sg.HorizontalSeparator(pad=(160,0), color=(173, 204, 218)), help,  sg.HorizontalSeparator(pad=(1,0), color=(173, 204, 218))]
 header = [sg.Push(), sg.Text("Score Splitter", font=h1), sg.Push()]
 input_output_file = [sg.Text("Input/Output", font=h2)]
 score_title = [sg.Text("Score:", font=h3)]
@@ -32,6 +34,8 @@ style_title = [sg.Text("Style:", font=h3)]
 style_input = [sg.Input(key="style", font=body)]
 parts_input_title = [sg.Text("Parts", font=h2)]
 parts_input = [sg.Multiline(default_parts, size=(40, 20), font=body, key="part_names")]
+output_checkbox = [sg.Checkbox('Output to individual part folders',font=h3, key='checkbox', default=True)]
+
 
 col1 = [
     input_output_file,
@@ -39,7 +43,7 @@ col1 = [
     score_browse,
     output_title,
     output_browse,
-    [sg.VSeparator(pad=10)],
+    output_checkbox,
     meta_title,
     title_title,
     title_input,
@@ -49,10 +53,10 @@ col1 = [
     style_input,
 ]
 
-col2 = [parts_input_title, parts_input]
+col2 = [[sg.VSeparator(pad=10)],parts_input_title, parts_input,]
 
 # Create Layout
-layout = [header, [sg.Push(), sg.Column(col1), sg.Column(col2), sg.Push()], [sg.VSeparator(pad=10)], form_buttons]
+layout = [header, [sg.Push(), sg.Column(col1), sg.Column(col2), sg.Push()], [sg.VerticalSeparator(pad=(0,10))], form_buttons]
 
 # Create the Window
 window = sg.Window("Score Splitter", layout, size=(800, 500))
@@ -60,6 +64,8 @@ window = sg.Window("Score Splitter", layout, size=(800, 500))
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
     event, values = window.read()
+    if event == "?":
+        sg.popup_scrolled(help_text, title='Score Splitter Instructions',font=h3, size=(50,10))
     if event == "Reset":
         window["score"].update("")
         window["title"].update("")
@@ -77,6 +83,7 @@ while True:
         output_complete_set = f"{output_path}/Complete Sets/{title} - Complete Set.pdf"
         parts = convert_string_to_array(values['part_names'])
 
+
         # Get part names & final directory paths
         part_folder_directories = [f"{output_path}/{part}" for part in parts]
         part_file_paths = [f"{output_path}/{title} - {part}.pdf" for part in parts]
@@ -88,7 +95,8 @@ while True:
         split_score_by_bookmarks(score_path, parts, score_metadata, output_path)
 
         # Move files to directories
-        move_files_to_directories(part_file_paths, part_folder_directories)
+        if (values['checkbox'] == True):
+            move_files_to_directories(part_file_paths, part_folder_directories)
 
     if event == sg.WIN_CLOSED: 
         break
