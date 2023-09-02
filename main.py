@@ -1,10 +1,10 @@
 import PySimpleGUI as sg
-from fileOperations import convert_txt_file_to_string, convert_string_to_array, move_files_to_directories
-from pdfOperations import add_metadata, split_score_by_bookmarks
+from file_operations import convert_txt_file_to_string, convert_string_to_array, move_files_to_directories
+from pdf_operations import add_metadata, split_score_by_bookmarks
 
 # Misc
 sg.theme("TealMono")
-default_parts = convert_txt_file_to_string('Parts_Default.txt')
+default_parts = convert_txt_file_to_string('parts_default.txt')
 help_text = convert_txt_file_to_string('help.txt')
 
 # Fonts

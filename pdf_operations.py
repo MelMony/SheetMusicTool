@@ -1,14 +1,19 @@
 import PyPDF2
+from pathlib import Path
 
 def add_metadata(file, output_path, metadata):
     """Creates a new pdf by copying the contents of the supplied pdf and adding the supplied PDF standard metadata.
 
     Args:
         file (str): A file path representing the inputpdf file for which to add metadata
-        output_path (str): A file path representing the location to output the new pdf with metadata
+        output_path (str): A directory path representing the location to output the new pdf with metadata
         metadata (dict[str, str]): A dictionary of key/value pairs representing the metadata to add to the pdf. Keys must follow the PDF standard.
     """
+    
     try:
+        if Path(file).suffix != '.pdf':
+            raise TypeError('Input file must be a pdf')
+        
         with open(file, "rb") as pdf_file:
             pdf_reader = PyPDF2.PdfReader(pdf_file)
             pdf_writer = PyPDF2.PdfWriter()
@@ -20,15 +25,19 @@ def add_metadata(file, output_path, metadata):
             for page in pdf_reader.pages:
                 pdf_writer.add_page(page)
 
-            # Create complete set with the new metadata
-            with open(output_path, "wb") as output_pdf:
-                pdf_writer.write(output_pdf)
+        # Create complete set with the new metadata
+        title = metadata.get('/Title')
+        output_path_pdf = f'{output_path}/{title} - Complete Set.pdf'
+                
+        with open(output_path_pdf, "wb") as output_pdf:
+            pdf_writer.write(output_pdf)
 
         print("Complete set with metadata created.")
 
     except FileNotFoundError:
         print(f"File not found: {file}")
-
+    except TypeError:
+        print('File suppiled is not of the .pdf format.')
 
 def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
     """Splits the given pdf score by its bookmarks that correlate to the given part names. The generated parts will include the given metadata and be stored at the given output location.
