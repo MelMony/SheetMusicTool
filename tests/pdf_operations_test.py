@@ -10,7 +10,7 @@ class TestPdfMetadata(unittest.TestCase):
         # Make temporary directory to house output
         cls.temp = tempfile.mkdtemp()
         cls.metadata = {'/Author': 'SpongeBob Squarepants, Patrick Star', '/Title': 'Who lives in a pineapple under the sea?', '/Subject': 'Calypso, Vocal'}
-        cls.score_path = './test_score.pdf'
+        cls.score_path = 'tests/test_score.pdf'
         cls.complete_set_path = 'Who lives in a pineapple under the sea? - Complete Set.pdf'
     
     @classmethod
@@ -55,7 +55,7 @@ class TestSplitPdfBookmarks(unittest.TestCase):
         # Make temporary directory to house output
         cls.temp = tempfile.mkdtemp()
         cls.metadata = {'/Author': 'SpongeBob Squarepants, Patrick Star', '/Title': 'Who lives in a pineapple under the sea?', '/Subject': 'Calypso, Vocal'}
-        cls.score_path = './test_score.pdf'
+        cls.score_path = 'tests/test_score.pdf'
         cls.part_names = ['Score', 'Vibraphone 1', 'Vibraphone 2', 'Male Vocal']
         cls.complete_set_path = 'Who lives in a pineapple under the sea? - Complete Set.pdf'
     
