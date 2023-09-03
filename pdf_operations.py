@@ -37,7 +37,7 @@ def add_metadata(file, output_path, metadata):
     except FileNotFoundError:
         print(f"File not found: {file}")
     except TypeError:
-        print('File suppiled is not of the .pdf format.')
+        print('File supplied is not of the .pdf format.')
 
 def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
     """Splits the given pdf score by its bookmarks that correlate to the given part names. The generated parts will include the given metadata and be stored at the given output location.
@@ -49,19 +49,17 @@ def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
         output_directory (str): A file path representing the output directory location to store the newly created files.
     """
     try:
+        if Path(score_pdf).suffix != '.pdf':
+            raise TypeError('Input file must be a pdf')
+        
         with open(score_pdf, "rb") as pdf_file:
             pdf_reader = PyPDF2.PdfReader(pdf_file)
-            # metadata = pdf_reader.metadata
-            bookmarks = pdf_reader.outline[1]
-            if len(bookmarks) < len(part_names):
-                print(
-                    f"Not enough bookmarks ({len(bookmarks)}) found in the document for the supplied part names ({len(part_names)})"
-                )
-                return
+            bookmarks = pdf_reader.outline
+            if len(bookmarks) != len(part_names):
+                raise ValueError(f"Mismatch between bookmark count ({len(bookmarks)}) and the supplied part names count ({len(part_names)})")
 
             # Loop through each bookmarked section
             for i in range(len(bookmarks)):
-                # for i in range(len(pdf_reader.pages)):
                 print(f"Creating part {part_names[i]}")
                 page_num_current_bookmark = pdf_reader.get_destination_page_number(
                     bookmarks[i]
@@ -93,3 +91,7 @@ def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
 
     except FileNotFoundError:
         print(f"File not found: {score_pdf}")
+    except TypeError:
+        print('File supplied is not of the .pdf format.')
+    except ValueError:
+        print('Supplied pdf with bookmarks does not match the supplied number of part names')

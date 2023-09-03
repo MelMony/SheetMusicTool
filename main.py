@@ -80,7 +80,6 @@ while True:
         author = values["composer"].strip()
         subject = values["style"].strip()
         score_metadata = {"/Title": title, "/Author": author, "/Subject": subject}
-        output_complete_set = f"{output_path}/Complete Sets/{title} - Complete Set.pdf"
         parts = convert_string_to_array(values['part_names'])
 
 
@@ -89,7 +88,7 @@ while True:
         part_file_paths = [f"{output_path}/{title} - {part}.pdf" for part in parts]
 
         # Add metadata to the score & output to directory
-        add_metadata(score_path, output_complete_set, score_metadata)
+        add_metadata(score_path, output_path, score_metadata)
 
         # Split score into parts
         split_score_by_bookmarks(score_path, parts, score_metadata, output_path)
