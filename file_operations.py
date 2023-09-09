@@ -5,23 +5,26 @@ def move_files_to_directories(files, target_directories):
     """Utility function to move files (parts) into new directory locations (part folders).
 
     Args:
-        files (list[str]): A list of file paths representing the files to be moved
+        files (str): A list of file paths representing the files to be moved
         target_directories (list[str]): A list of file paths representing the locations to output files
     """
-    for target in target_directories:
-        if not os.path.exists(target):
-            os.makedirs(target)
+    try: 
+        # Check files exist
+        for file in files:
+            if not os.path.exists(file):
+                raise FileNotFoundError
 
-    for file, target_directory in zip(files, target_directories):
-        if not os.path.exists(file):
-            print(f"File not found: {file}")
-            continue
+        for file, target_directory in zip(files, target_directories):
+            # If folders dont yet exist make them
+            if not os.path.exists(target_directory):
+                os.makedirs(target_directory)
 
-        if not os.path.exists(target_directory):
-            os.makedirs(target_directory)
-
-        shutil.move(file, os.path.join(target_directory, os.path.basename(file)))
-        print(f"Moved {file} to {target_directory}.")
+            # Move files to folders - will replace any existing files of the same name
+            shutil.move(file, os.path.join(target_directory, os.path.basename(file)))
+            print(f"Moved {file} to {target_directory}.")
+    
+    except FileNotFoundError:
+        print(f"File not found: {file}")
 
 
 def convert_txt_file_to_string(file):
