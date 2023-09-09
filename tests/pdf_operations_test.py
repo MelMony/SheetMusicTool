@@ -1,7 +1,7 @@
 import os
 import unittest
 import tempfile
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from pdf_operations import add_metadata, split_score_by_bookmarks
 
 class TestPdfMetadata(unittest.TestCase):

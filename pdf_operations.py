@@ -1,4 +1,4 @@
-import PyPDF2
+from pypdf import PdfReader, PdfWriter
 from pathlib import Path
 
 def add_metadata(file, output_path, metadata):
@@ -15,8 +15,8 @@ def add_metadata(file, output_path, metadata):
             raise TypeError('Input file must be a pdf')
         
         with open(file, "rb") as pdf_file:
-            pdf_reader = PyPDF2.PdfReader(pdf_file)
-            pdf_writer = PyPDF2.PdfWriter()
+            pdf_reader = PdfReader(pdf_file)
+            pdf_writer = PdfWriter()
 
             # Update metadata in the new PDF writer
             pdf_writer.add_metadata(metadata)
@@ -53,7 +53,7 @@ def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
             raise TypeError('Input file must be a pdf')
         
         with open(score_pdf, "rb") as pdf_file:
-            pdf_reader = PyPDF2.PdfReader(pdf_file)
+            pdf_reader = PdfReader(pdf_file)
             bookmarks = pdf_reader.outline
             if len(bookmarks) != len(part_names):
                 raise ValueError(f"Mismatch between bookmark count ({len(bookmarks)}) and the supplied part names count ({len(part_names)})")
@@ -72,7 +72,7 @@ def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
                     )
 
                 # Create a new PDF with just the bookmarked section
-                pdf_writer = PyPDF2.PdfWriter()
+                pdf_writer = PdfWriter()
                 for j in range(page_num_next_bookmark - page_num_current_bookmark):
                     pdf_writer.add_page(pdf_reader.pages[page_num_current_bookmark + j])
 
