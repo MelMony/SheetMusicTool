@@ -47,6 +47,12 @@ def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
         part_names (list[str]): A list of part names that correlate with the given bookmarks. The number of bookmarks and parts must match.
         metadata (dict[str,str]): A dictionary of key/value pairs representing the metadata to add to the pdf. Keys must follow the PDF standard.
         output_directory (str): A file path representing the output directory location to store the newly created files.
+        
+        Raises:
+        FileNotFoundError: Throws when the given score pdf path does does not exist.
+        TypeError: Throws when the supplied score path does not point to a file in the .pdf format.
+        ValueError: Throws when the number of part names does not match the number of bookmarks found.
+        
     """
     try:
         if Path(score_pdf).suffix != '.pdf':
@@ -95,3 +101,52 @@ def split_score_by_bookmarks(score_pdf, part_names, metadata, output_directory):
         print('File supplied is not of the .pdf format.')
     except ValueError:
         print('Supplied pdf with bookmarks does not match the supplied number of part names')
+        
+
+def split_score_by_pages(score_pdf, part_page_nums, metadata, output_directory):
+    """Spilts a score into parts according to the given page numbers. 
+    Adds the supplied part names and metadata to each part and outputs as a new pdf
+    to the specified output directory.
+
+    Args:
+        score_pdf (str): A file path representing the pdf of the score to be split into parts.
+        part_page_nums (dict[str, (int, int)]): A dictionary of part name keys with tuple values that represent their start and end pages (zero indexed & inclusive).
+        metadata (dict[str,str]): A dictionary of key/value pairs representing the metadata to add to the pdf. Keys must follow the PDF standard.
+        output_directory (str): A file path representing the output directory location to store the newly created files.
+
+    Raises:
+        FileNotFoundError: Throws when the given score pdf path does not exist.
+        TypeError: Throws when the supplied score path does not point to a file in the .pdf format.
+    """
+    try:
+        if Path(score_pdf).suffix != '.pdf':
+            raise TypeError('Input file must be a pdf')
+        
+        with open(score_pdf, "rb") as pdf_file:
+            pdf_reader = PdfReader(pdf_file)
+            
+            for part, pages in part_page_nums.items():
+                print(f"Creating part {part}")
+
+                pdf_writer = PdfWriter()
+                for i in range(pages[0], pages[1] + 1):
+                    pdf_writer.add_page(pdf_reader.pages[i])
+
+                new_metadata = metadata.copy()
+
+                new_metadata["/Tags"] = f"{part}"
+                pdf_writer.add_metadata(new_metadata)
+                output_file_path = (
+                    f"{output_directory}/{metadata['/Title']} - {part}.pdf"
+                )
+
+                with open(output_file_path, "wb") as output_pdf:
+                    pdf_writer.write(output_pdf)
+
+                print(f"Extracted part '{part}' to '{output_file_path}'.")
+                
+    
+    except FileNotFoundError:
+        print(f"File not found: {score_pdf}")
+    except TypeError:
+        print('File supplied is not of the .pdf format.')
