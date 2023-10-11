@@ -2,7 +2,7 @@ import os
 import shutil
 import unittest
 import tempfile as tf
-from file_operations import move_files_to_directories
+from file_operations import convert_string_to_part_pages, move_files_to_directories
 
 class TestMoveFilesToDirectories(unittest.TestCase):
     @classmethod
@@ -65,3 +65,22 @@ class TestMoveFilesToDirectories(unittest.TestCase):
         
         self.assertRaises(FileNotFoundError)
 
+class TestConvertStringToPartPages(unittest.TestCase):
+    
+    def test_good_input(self):
+        expected = {'Alto Sax 1': (1, 2), 'Alto Sax 2': (3,5), 'Tenor Sax 1': (6, 10)}
+        actual = convert_string_to_part_pages('Alto Sax 1, 1-2\nAlto Sax 2, 3-5\nTenor Sax 1, 6-10')
+        
+        self.assertDictEqual(actual, expected)
+        
+    def test_no_newline(self):
+        with self.assertRaisesRegex(ValueError, 'Text must contain a newline between each part.'):
+            convert_string_to_part_pages('Alto Sax 1, 1-2 Alto Sax 2, 3-5 Tenor Sax 1, 6-10')
+        
+    def test_no_comma(self):
+        with self.assertRaisesRegex(ValueError,'Text must contain a comma between the part name and page range'):
+            convert_string_to_part_pages('Alto Sax 1 1-2\nAlto Sax 2 3-5\nTenor Sax 1 6-10')
+        
+    def test_no_hyphen(self):
+        with self.assertRaisesRegex(ValueError, 'Text must contain a hyphen between the page range numbers.'):
+            convert_string_to_part_pages('Alto Sax 1, 1 2\nAlto Sax 2, 3 5\nTenor Sax 1, 6 10')

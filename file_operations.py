@@ -43,9 +43,39 @@ def convert_string_to_array(text):
     """Utility function to convert a string into an array of strings using the newline character as the delimiter.
 
     Args:
-        text (str): A string of text to be converted. Should contain newline characters to indicate split positions.
+        text (str): A string of text to be converted. Must contain newline characters to indicate split positions.
 
     Returns:
         list[str]: An array of strings representing the converted text. 
     """
     return text.split('\n')
+
+
+def convert_string_to_part_pages(text):
+    """Utility function to convert a string into a dictionary of part names and associated inclusive page ranges.
+
+    Args:
+        text (str): A string of text to be converted. 
+        Must contain newline character indicating each new part, a comma between the part name and page range, and a hyphen between the page numbers.
+        Example: Alto Sax 1, 12-14
+
+    Returns:
+        dict[str, (int, int)]: A dictionary of part name keys and associated inclusive page range values.
+    """
+    if '\n' not in text:
+        raise ValueError('Text must contain a newline between each part.')
+    
+    result = {}
+    
+    for part in text.split('\n'):
+        if ',' not in part:
+            raise ValueError('Text must contain a comma between the part name and page range')
+        part_pages = part.split(',', 1)
+        
+        if '-' not in part_pages[1]:
+            raise ValueError('Text must contain a hyphen between the page range numbers.')
+        page_numbers = part_pages[1].split('-', 1)
+        
+        result[part_pages[0]] = (int(page_numbers[0]), int(page_numbers[1]))
+    
+    return result
