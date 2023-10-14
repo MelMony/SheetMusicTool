@@ -76,6 +76,6 @@ def convert_string_to_part_pages(text):
             raise ValueError('Text must contain a hyphen between the page range numbers.')
         page_numbers = part_pages[1].split('-', 1)
         
-        result[part_pages[0].strip()] = (int(page_numbers[0].strip()), int(page_numbers[1].strip()))
+        result[part_pages[0].strip()] = (int(page_numbers[0].strip())-1, int(page_numbers[1].strip())-1)
     
     return result

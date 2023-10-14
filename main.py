@@ -87,7 +87,8 @@ while True:
         part_file_paths = [f"{output_path}/{title} - {part}.pdf" for part in parts]
 
         # Add metadata to the score & output to directory
-        add_metadata(score_path, output_path, score_metadata)
+        add_metadata(score_path, f'{output_path}/Complete Sets' if values['checkbox'] == True else output_path, score_metadata)
+        
 
         # Split score into parts
         if values['split_bookmarks'] == True:
