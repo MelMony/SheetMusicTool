@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from file_operations import convert_txt_file_to_string, convert_string_to_array, move_files_to_directories
+from file_operations import convert_string_to_part_pages, convert_txt_file_to_string, convert_string_to_array, move_files_to_directories
 from pdf_operations import add_metadata, split_score_by_bookmarks, split_score_by_pages
 
 # Misc
@@ -80,7 +80,7 @@ while True:
         author = values["composer"].strip()
         subject = values["style"].strip()
         score_metadata = {"/Title": title, "/Author": author, "/Subject": subject}
-        parts = convert_string_to_array(values['part_names'])
+        parts = convert_string_to_array(values['part_names']) if values['split_bookmarks'] == True else convert_string_to_part_pages(values['part_names']).keys()
 
         # Get part names & final directory paths
         part_folder_directories = [f"{output_path}/{part}" for part in parts]
@@ -93,7 +93,7 @@ while True:
         if values['split_bookmarks'] == True:
             split_score_by_bookmarks(score_path, parts, score_metadata, output_path)
         else:
-            split_score_by_pages(score_path, parts, score_metadata, output_path)
+            split_score_by_pages(score_path, convert_string_to_part_pages(values['part_names']), score_metadata, output_path)
 
         # Move files to directories
         if values['checkbox'] == True:

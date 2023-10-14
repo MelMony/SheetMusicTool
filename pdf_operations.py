@@ -27,7 +27,7 @@ def add_metadata(file, output_path, metadata):
 
         # Create complete set with the new metadata
         title = metadata.get('/Title')
-        output_path_pdf = f'{output_path}/{title} - Complete Set.pdf'
+        output_path_pdf = f'{output_path}Complete Sets/{title} - Complete Set.pdf'
                 
         with open(output_path_pdf, "wb") as output_pdf:
             pdf_writer.write(output_pdf)
