@@ -134,7 +134,7 @@ def split_score_by_pages(score_pdf, part_page_nums, metadata, output_directory):
 
                 new_metadata = metadata.copy()
 
-                new_metadata["/Tags"] = f"{part}"
+                new_metadata["/Keywords"] = f"{part}"
                 pdf_writer.add_metadata(new_metadata)
                 output_file_path = (
                     f"{output_directory}/{metadata['/Title']} - {part}.pdf"

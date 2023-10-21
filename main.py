@@ -64,15 +64,20 @@ window = sg.Window("Score Splitter", layout, size=(800, 500))
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
     event, values = window.read()
-    if event == "?":
+    if event == sg.WIN_CLOSED: 
+        break
+
+    elif event == "?":
         sg.popup_scrolled(help_text, title='Score Splitter Instructions',font=h3, size=(50,10))
-    if event == "Reset":
+    
+    elif event == "Reset":
         window["score"].update("")
         window["title"].update("")
         window["composer"].update("")
         window["style"].update("")
         window['part_names'].update(default_parts)
-    if event == "Submit":
+    
+    elif event == "Submit":
         # Get data from form
         score_path = values["score"]
         output_path = values["output"]
@@ -99,9 +104,5 @@ while True:
         # Move files to directories
         if values['checkbox'] == True:
             move_files_to_directories(part_file_paths, part_folder_directories)
-
-    if event == sg.WIN_CLOSED: 
-        break
-
 
 window.close()
